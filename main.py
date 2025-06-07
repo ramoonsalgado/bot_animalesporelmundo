@@ -30,7 +30,7 @@ def get_latest_post():
         if last_post != link:
             print("Nuevo post detectado. Enviando mensaje.")
             save_last_post(link)
-            send_telegram_message(f"📢 Nuevo post: {title}\n🔗 {link}")
+            send_telegram_message(f"📢 <b>Nuevo post:</b> {title}<br>🔗 <a href=\"{link}\">{link}</a>")
         else:
             print("No hay nuevos posts.")
     else:
@@ -38,10 +38,15 @@ def get_latest_post():
 
 def send_telegram_message(text):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    payload = {"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}
+    payload = {
+        "chat_id": CHAT_ID,
+        "text": text,
+        "parse_mode": "HTML"  # Cambiado de Markdown a HTML
+    }
     response = requests.post(url, json=payload)
     if response.status_code != 200:
         print(f"Error al enviar el mensaje: {response.status_code} - {response.text}")
+
 
 if __name__ == "__main__":
     get_latest_post()
